@@ -69,7 +69,7 @@ export default function Navbar() {
         />
         <HStack spacing={8} alignItems={'center'}>
           <Heading size="md" as={RouterLink} to="/" color="white">
-            Assignment Portal
+            Class Connect
           </Heading>
           <HStack
             color={'white'}
