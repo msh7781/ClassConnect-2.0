@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import { auth, authService } from '../services/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { User } from '../types';
-
+// this context is used to provide the authentication context to the app
 interface AuthContextType {
   currentUser: User | null;
   loading: boolean;
@@ -10,12 +10,12 @@ interface AuthContextType {
   register: (email: string, password: string, name: string, role: 'student' | 'teacher') => Promise<any>;
   logout: () => Promise<void>;
 }
-
+// this context is used to provide the authentication context to the app
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) {
+  const context = useContext(AuthContext); 
+  if (!context) { 
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
@@ -28,11 +28,11 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-
+// this effect is used to get the current user and set the current user in the state firebase
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => { 
       try {
-        if (firebaseUser) {
+        if (firebaseUser) { // if the user is authenticated, get the user profile from the database
           console.log('Firebase user detected:', firebaseUser.email);
           
           // Get user profile from Firestore
@@ -40,7 +40,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           console.log('User profile from Firestore:', userProfile);
           
           if (userProfile) {
-            const user = {
+            const user = { // if the user profile is found, set the current user in the state firebase
               id: firebaseUser.uid,
               name: userProfile.name || '',
               email: firebaseUser.email || '',
@@ -49,10 +49,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
             };
             console.log('Setting current user:', user);
             setCurrentUser(user);
-          } else {
+          } else { // if the user profile is not found, set the current user in the state firebase to the default user
             console.log('No user profile found, using default');
             // If profile not found, use basic Firebase user info
-            setCurrentUser({
+            setCurrentUser({ // if the user profile is not found, set the current user in the state firebase to the default user
               id: firebaseUser.uid,
               name: firebaseUser.displayName || 'User',
               email: firebaseUser.email || '',
@@ -74,20 +74,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return () => unsubscribe();
   }, []);
 
-  const login = (email: string, password: string) => {
+  const login = (email: string, password: string) => {// this function is used to login the user and redirect to the dashboard
     return authService.login(email, password);
   };
 
   const register = (email: string, password: string, name: string, role: 'student' | 'teacher') => {
-    return authService.register(email, password, name, role);
+    return authService.register(email, password, name, role); // this function is used to register the user and redirect to the dashboard
   };
 
   const logout = async () => {
-    await authService.logout();
+    await authService.logout(); // this function is used to logout the user and redirect to the login page
     setCurrentUser(null);
   };
 
-  const value = {
+  const value = { // this function is used to provide the authentication context to the app
     currentUser,
     loading,
     login,

@@ -20,12 +20,12 @@ import {
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-
+// this component is used to display the navigation bar at the top of the app
 interface NavLinkProps {
   children: ReactNode;
   to: string;
 }
-
+// this component is used to display the navigation links in the navigation bar
 const NavLink = ({ children, to }: NavLinkProps) => {
   return (
     <Link
@@ -42,12 +42,12 @@ const NavLink = ({ children, to }: NavLinkProps) => {
     </Link>
   );
 };
-
+// this component is used to display the navigation bar at the top of the app
 export default function Navbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
-  
+  // this function is used to logout the user and redirect to the login page
   const handleLogout = async () => {
     try {
       await logout();
@@ -78,7 +78,7 @@ export default function Navbar() {
             display={{ base: 'none', md: 'flex' }}>
             {currentUser ? (
               <>
-                <NavLink to="/">Dashboard</NavLink>
+                <NavLink to="/">Home</NavLink>
                 {currentUser.role === 'teacher' && (
                   <>
                     <NavLink to="/assignments">Assignments</NavLink>
@@ -132,7 +132,7 @@ export default function Navbar() {
           <Stack as={'nav'} spacing={4}>
             {currentUser ? (
               <>
-                <NavLink to="/">Dashboard</NavLink>
+                <NavLink to="/">Home</NavLink>
                 {currentUser.role === 'teacher' && (
                   <>
                     <NavLink to="/assignments">Assignments</NavLink>
