@@ -15,24 +15,28 @@ import StudentDashboard from './pages/StudentDashboard';
 import TeacherDashboard from './pages/TeacherDashboard';
 import Landing from './pages/Landing';
 
+// defines the routes for the app and the private routes for the teacher and student routes
 function AppRoutes() {
   const { currentUser, loading } = useAuth();
   const location = useLocation();
 
   // Determine default redirect path based on user role
   const getDefaultPath = () => {
+    // if the user is not logged in, redirect to the login page
     if (!currentUser) return '/login';
     return currentUser.role === 'teacher' ? '/teacher-dashboard' : '/student-dashboard';
   };
 
   return (
+    // this component is used to display the routes for the app
     <Routes>
-      
+  
+      {/* Landing page which is accessible to all users */}
       <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       
-      {/* Student routes */}
+      {/* Student routes which are private and only accessible to students */}
       <Route 
         path="/student-dashboard" 
         element={
@@ -42,7 +46,7 @@ function AppRoutes() {
         } 
       />
       
-      {/* Teacher routes */}
+      {/* Teacher routes which are private and only accessible to teachers */}
       <Route 
         path="/teacher-dashboard" 
         element={
@@ -52,7 +56,7 @@ function AppRoutes() {
         } 
       />
       
-      {/* Redirect based on role */}
+      {/* Redirect based on role if the user is not logged in or does not have the required role */}
       <Route 
         path="*" 
         element={<Navigate to={getDefaultPath()} state={{ from: location }} replace />} 
@@ -60,7 +64,8 @@ function AppRoutes() {
     </Routes>
   );
 }
-
+// wraps everything in the app in the AuthProvider and the navbar
+// the AuthProvider is used to provide the authentication context to the app
 function App() {
   return (
     <AuthProvider>
